@@ -1,0 +1,40 @@
+name: Build VS Project
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive  # 如果有子模块
+    
+    - name: Setup MSBuild (VS 2022)
+      uses: microsoft/setup-msbuild@v1.1
+      with:
+        vs-version: '[17.0,18.0)'  # VS 2022
+    
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v1
+      
+    - name: Restore NuGet packages
+      run: nuget restore LeakedWallpaper.sln
+      
+    - name: Build Solution
+      run: msbuild LeakedWallpaper.sln /p:Configuration=Release /p:Platform=x86 /m
+      
+    - name: Upload EXE
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-exe
+        path: |
+          **/bin/Release/**/*.exe
+          **/x64/Release/**/*.exe
