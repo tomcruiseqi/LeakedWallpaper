@@ -1,11 +1,10 @@
 name: Build VS Project
-
 on:
   push:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
-  workflow_dispatch:  # 允许手动触发
+  workflow_dispatch:
 
 jobs:
   build:
@@ -15,12 +14,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
       with:
-        submodules: recursive  # 如果有子模块
+        submodules: recursive
     
     - name: Setup MSBuild (VS 2022)
       uses: microsoft/setup-msbuild@v2
       with:
-        vs-version: '[17.0,18.0)'  # VS 2022
+        vs-version: '[17.0,18.0)'
     
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v2
@@ -31,10 +30,18 @@ jobs:
     - name: Build Solution
       run: msbuild LeakedWallpaper.sln /p:Configuration=Release /p:Platform=x86 /m
       
+    - name: List output files
+      run: |
+        echo "=== Searching for EXE files ==="
+        Get-ChildItem -Path . -Filter *.exe -Recurse | ForEach-Object { $_.FullName }
+        echo "=== Directory structure ==="
+        Get-ChildItem -Path . -Recurse -Directory | Select-Object FullName
+      
     - name: Upload EXE
       uses: actions/upload-artifact@v4
       with:
         name: release-exe
         path: |
-          **/bin/Release/**/*.exe
-          **/x64/Release/**/*.exe
+          **/Release/*.exe
+          **/bin/Release/*.exe
+          **/bin/x86/Release/*.exe
