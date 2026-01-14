@@ -40,7 +40,7 @@ jobs:
     - name: Upload EXE
       uses: actions/upload-artifact@v4
       with:
-        name: release-exe
+        name: LeakedWallpaper
         path: |
           **/Release/*.exe
           **/bin/Release/*.exe
