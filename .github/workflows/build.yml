@@ -13,17 +13,17 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         submodules: recursive  # 如果有子模块
     
     - name: Setup MSBuild (VS 2022)
-      uses: microsoft/setup-msbuild@v1.1
+      uses: microsoft/setup-msbuild@v2
       with:
         vs-version: '[17.0,18.0)'  # VS 2022
     
     - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1
+      uses: NuGet/setup-nuget@v2
       
     - name: Restore NuGet packages
       run: nuget restore LeakedWallpaper.sln
@@ -32,7 +32,7 @@ jobs:
       run: msbuild LeakedWallpaper.sln /p:Configuration=Release /p:Platform=x86 /m
       
     - name: Upload EXE
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: release-exe
         path: |
