@@ -28,7 +28,7 @@ jobs:
       run: nuget restore LeakedWallpaper.sln
       
     - name: Build Solution
-      run: msbuild LeakedWallpaper.sln /p:Configuration=Release /p:Platform=x86 /m
+      run: msbuild LeakedWallpaper.sln /p:Configuration=Release /p:Platform=x64 /m
       
     - name: List output files
       run: |
@@ -44,4 +44,4 @@ jobs:
         path: |
           **/Release/*.exe
           **/bin/Release/*.exe
-          **/bin/x86/Release/*.exe
+          **/bin/x64/Release/*.exe
